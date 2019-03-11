@@ -16,12 +16,14 @@ def mask_ops(image_np, resized_im, seg_map, pad_x):
     # Normalize the output
     labels = np.argmax(seg_map.squeeze(),-1)
     label = labels[:-pad_x]
-
+    print('paddd', pad_x)
+    print('LABEL...', label.shape)
     prediction_mask = (label.squeeze() == 7)
-
+    print('Preddd...', prediction_mask.shape)
     # Let's apply some morphological operations to
     # create the contour for our sticker
     prediction_mask = np.invert(prediction_mask)
+    print('pred mask', prediction_mask.shape)
     
     cropped_object = image_np * np.dstack((prediction_mask,) * 3)
     
@@ -74,7 +76,7 @@ def main(url):
 
     image_np, resized_im, pad_x = read_image(url)
     
-    seg_map = deeplab_model.predict(np.expand_dims(resized_im,0))
+    seg_map = deeplab_model.predict(np.expand_dims(resized_im, 0))
 
     input_mask = mask_ops(image_np, resized_im, seg_map, pad_x)
 
@@ -98,5 +100,5 @@ def main(url):
     # cv2.imwrite('image_labels.jpg', labels[:-pad_x])
 
 if __name__ == '__main__':
-    url = "image1.jpg"
+    url = "imgs/image1.jpg"
     main(url)

@@ -119,55 +119,6 @@ def simple_plot(model, url):
     io.imshow(label.squeeze())
     io.show()
 
-def contour_plot(model, url):
-
-    # Read Inputs
-    image_np, resized_im, pad_x = read_image(url)
-
-    # Predict mask map
-    seg_map = run_model(model, resized_im)
-
-    # Normalize the output
-    labels = np.argmax(seg_map.squeeze(),-1)
-    label = labels[:-pad_x]
-
-    prediction_mask = (label.squeeze() == 7)
-
-    # Let's apply some morphological operations to
-    # create the contour for our sticker
-    # NECESSARY FOR INVERT MASK
-    prediction_mask = np.invert(prediction_mask)
-
-    cropped_object = image_np * np.dstack((prediction_mask,) * 3)
-    
-    io.imshow(cropped_object)
-    io.show()
-
-    square = skimage.morphology.square(5)
-
-    temp = skimage.morphology.binary_erosion(prediction_mask, square)
-
-    # Invert values
-    negative_mask = (temp != True)
-    
-    eroding_countour = negative_mask * prediction_mask
-
-    eroding_countour_img = np.dstack((eroding_countour, ) * 3)
-
-    cropped_object[eroding_countour_img] = 248
-
-    png_transparancy_mask = np.uint8(prediction_mask * 255)
-
-    image_shape = cropped_object.shape
-
-    png_array = np.zeros(shape=[image_shape[0], image_shape[1], 4], dtype=np.uint8)
-
-    png_array[:, :, :3] = cropped_object
-
-    png_array[:, :, 3] = png_transparancy_mask
-
-    io.imshow(png_array)
-    io.show()
 
 def run_visualization(url, MODEL):
     """Inferences DeepLab model and visualizes result."""

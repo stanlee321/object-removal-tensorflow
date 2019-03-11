@@ -59,31 +59,29 @@ def read_image(url):
         return
 
     w, h, _ = img.shape
+
     ratio = 512. / np.max([w,h])
-    image_np = cv2.resize(img,(int(ratio*h),int(ratio*w)))
+    image_np = cv2.resize(img, (int(ratio*h),int(ratio*w)))
     resized = image_np / 127.5 - 1.
     pad_x = int(512 - resized.shape[0])
-    resized_im = np.pad(resized,((0,pad_x),(0,0),(0,0)), mode='constant')
-
-    return image_np, resized_im, pad_x
-
-
+    resized_im = np.pad(resized, ((0, pad_x),(0,0),(0,0)), mode='constant')
+    return img, resized_im, pad_x
 
 
 def main(url):
     deeplab_model = DeepModel()
 
-    image_np, resized_im, pad_x = read_image(url)
+    image, resized_im, _ = read_image(url)
     
-    seg_map = deeplab_model.predict(np.expand_dims(resized_im,0))
+    deeplab_model.mask_model.create_mask_tool.image = image
+    model = deeplab_model.forward()
+    seg_map = model.predict(np.expand_dims(resized_im, 0))
     input_mask = seg_map
-    print(input_mask.shape)
-    input_mask = rgba2rgb(input_mask)
-
+    array = input_mask.squeeze()
     # Plot
-    io.imshow(input_mask)
+    io.imshow(array)
     io.show()
 
 if __name__ == '__main__':
-    url = "deeplab3/imgs/image1.jpg"
+    url = "./deeplab3/imgs/image1.jpg"
     main(url)

@@ -15,11 +15,12 @@ from keras.utils import plot_model
 import keras
 import keras.backend as K
 import tensorflow as tf
+from keras.engine.topology import get_source_inputs
 
 import numpy as np
 
 # Tools
-from tools.maskgen import create_tf_mask
+from tools.maskgen import CreateMaskTool
 
 # Load deeplab model
 from deeplab3.model import Deeplabv3
@@ -27,77 +28,93 @@ from inpainting.model import model_generator
 from inpainting.model import model_discriminator
 
 
-def call_py_function(x):
+class MaskModel:
+    def __init__(self, input_shape=(512, 512, 3), input_tensor=None):
+        self.input_shape = input_shape
+        self.create_mask_tool = CreateMaskTool()
+    
+    def call_py_function(self, x):
+    
+        img_np = x[:,:,:,0:3]
+        mask   = x[:,:,:,3:]
 
-    print(x.get_shape())
+        mask = tf.py_func(self.create_mask_tool.create_tf_mask, 
+                    [img_np, mask],
+                    [tf.float32],
+                    stateful=False,
+                    name='mask_opt')
+        return mask
 
-    mask = x[:,:,:,0:3]
-    img_np = x[:,:,:,3:]
-
-    print('MASK', mask.get_shape())
-    print('img-np', img_np.get_shape())
-
-    mask = tf.py_func(create_tf_mask, 
-                [img_np, mask],
-                ["float32"],
-                stateful=False,
-                name='mask_opt')
-    return mask
-
-def MaskModel(input_shape=(512, 512, 3), input_tensor=None):
-    if input_tensor is None:
-        img_input = Input(shape=input_shape)
-    else:
-        if not K.is_keras_tensor(input_tensor):
-            img_input = Input(tensor=input_tensor, shape=input_shape)
+    def forward(self, input_tensor=None):
+        if input_tensor is None:
+            img_input = Input(shape=self.input_shape)
         else:
-            img_input = input_tensor
+            if not K.is_keras_tensor(input_tensor):
+                img_input = Input(tensor=input_tensor, shape=self.input_shape)
+            else:
+                img_input = input_tensor
+        # x = MaskLayer(input_shape=input_shape, output_dim=input_shape)(img_input)
+        x = Lambda(self.call_py_function, output_shape=K.get_variable_shape(img_input))(img_input)
+        
+        if input_tensor is not None:
+            inputs = get_source_inputs(input_tensor)
+        else:
+            inputs = img_input
+        
+        model = Model(inputs, x)
 
-    inputs = img_input
-
-    # x = MaskLayer(input_shape=input_shape, output_dim=input_shape)(img_input)
-    x = Lambda(call_py_function, output_shape=input_shape)(inputs)
-
-    model = Model(inputs, x)
-
-    return model
+        return model
 
 
-def DeepModel(input_shape=(512, 512, 3)):
+class DeepModel:
+    def __init__(self, input_tensor=None, input_shape=(512, 512, 3)):
+        self.input_tensor = input_tensor
+        self.input_shape = input_shape
+        self.mask_model = MaskModel(input_shape=self.input_shape)
+        self.deeplab_model = Deeplabv3(weights='pascal_voc', 
+                                        input_tensor=None,
+                                        input_shape=self.input_shape, 
+                                        classes=21, 
+                                        backbone='mobilenetv2', 
+                                        OS=16, alpha=1.)
 
-    # Set Tensor Input Placeholder
-    inputs = Input(shape=input_shape, name='deeplab_input')
+    def forward(self, input_tensor=None):
+        # Set Tensor Input Placeholder
+        if input_tensor is None:
+            img_input = Input(shape=self.input_shape)
+        else:
+            if not K.is_keras_tensor(input_tensor):
+                img_input = Input(tensor=input_tensor, shape=self.input_shape)
+            else:
+                img_input = input_tensor
 
-    # Instantiate DeepLabv3 model
-    deeplab_model = Deeplabv3(weights='pascal_voc', 
-                        input_tensor=None,
-                        input_shape=input_shape, 
-                        classes=3, 
-                        backbone='mobilenetv2', 
-                        OS=16, alpha=1.)
+        # Concatenate DeepLab Mask Outout + Input
+        x = keras.layers.concatenate([img_input, self.deeplab_model(img_input)])
 
-    # Instantiate MaskModel Model
-    mask_model = MaskModel(input_shape=input_shape)
+        # Ensure that the model takes into account
+        # any potential predecessors of `input_tensor`.
+        if input_tensor is not None:
+            inputs = get_source_inputs(input_tensor)
+        else:
+            inputs = img_input
+        # Create deeplab + masked_output
+        mask_model = self.mask_model.forward()
 
-    # Concatenate DeepLab Mask Outout + Input
-    x = keras.layers.concatenate([inputs, deeplab_model(inputs)])
-
-    # Create deeplab + masked_output
-    deeplab_seg_model = Model(inputs, mask_model(x))
+        model = Model(inputs, mask_model(x))
+        
+        return model
     
-    return deeplab_seg_model
-    
-    """
-    # Instantiate Generator model
-    generator = model_generator(input_shape)
+        """
+        # Instantiate Generator model
+        generator = model_generator(input_shape)
 
-    # Create Generator model
-    generator_seg_model = Model(inputs, generator(deeplab_seg_model(inputs)))
+        # Create Generator model
+        generator_seg_model = Model(inputs, generator(deeplab_seg_model(inputs)))
 
-    # Instatiate Discrimitator model
-    
-    plot_model(generator_seg_model, to_file='generator_deeplab.png', show_shapes=True)
-    """
+        # Instatiate Discrimitator model
+        
+        plot_model(generator_seg_model, to_file='generator_deeplab.png', show_shapes=True)
+        """
 
     #autoencoder = Model(inputs, decoder(deeplab(inputs)), name='autoencoder')    
 if __name__ == '__main__':
