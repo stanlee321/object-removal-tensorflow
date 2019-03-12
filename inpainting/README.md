@@ -28,4 +28,13 @@ unzip val_256.tar
 ```
 
 
-> Author : P. Sai Vinay
+### TODOs
+
+* Use the `poissonblending` as proposed by `pytorch-siggraph2017-inpainting` for obtain better results.
+
+
+### References
+
+* [pytorch-siggraph2017-inpainting](https://github.com/akmtn/pytorch-siggraph2017-inpainting)
+* [image completion](https://github.com/neka-nat/image_completion_keras)
+* [Globally and Locally Consistent Image Completion (GLCIC)](https://github.com/tadax/glcic)

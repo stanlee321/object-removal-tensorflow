@@ -1,6 +1,6 @@
 # Object Removal Keras
 
-The general idea is to use the mask generade by Object Segmentation model like DeepLabv3+ for the Object Removal task, for accomplish this we use three Networks, [DeepLabv3+(mobilenetsV2 backbone)](http://www.google.com) + [customlayer](http://www.google.com) + [glcic](http://www.google.com).
+The general idea is to use the mask generade by Object Segmentation model like DeepLabv3+ for the Object Removal task, for accomplish this we use three Networks, [DeepLabv3+(mobilenetsV2 backbone)](https://github.com/stanlee321/object-removal-tensorflow/tree/master/deeplab3) + [customlayer](https://www.tensorflow.org/tutorials/eager/custom_layers) + [glcic](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting).
 
 The first network computes the `mask hole` the second one compute the hole in the image  and the thirt fills the white hole using a [GAN](www.google.com) .
 
@@ -21,7 +21,7 @@ Run the script `test.py` in the root of the folder, this will annalice the image
 
 #### For test with video
 
-Run the script `test_video.py` in the root of the folder, this will use the `src = 0` of your computer as a video input, with the next output:
+Run the script `test_video.py` in the root of the folder, this will use the `src = 0` of your computer as the video input, with the next output:
 
 
 ```console
@@ -35,6 +35,9 @@ TIME that took the inference 1.622474193572998
 TIME that took the inference 1.6862339973449707
 TIME that took the inference 1.6034736633300781
 TIME that took the inference 1.6270244121551514
+...
+...
+...
 
 ```
 <div style="text-align:center"><img src ="./images/test_video.png" /></div>
@@ -42,7 +45,7 @@ TIME that took the inference 1.6270244121551514
 
 #### Change removed object:
 
-In the Pascal VOC dataset for segmentation exist the next categories:
+In the Pascal VOC dataset for segmentation there are the next categories:
 
 ```JSON
 """
@@ -97,5 +100,9 @@ def main(url):
 
 
 ### TODOs
-* Train the `inpainting` network with outside dataset.
+* Train the `inpainting` network with places365 dataset.
 * Merge the `intainting` network with the  proposed `model` for fill the white holes.
+
+## References
+
+* [Fully Convolutional Networks (FCNs) for Image Segmentation](http://warmspringwinds.github.io/tensorflow/tf-slim/2017/01/23/fully-convolutional-networks-(fcns)-for-image-segmentation/)

@@ -110,3 +110,9 @@ Use the `./tools/plot.py` script for plot the mask according to the situation.
 Keras==2.1.5  
 tensorflow-gpu==1.6.0  
 CUDA==9.0   
+
+
+## References
+
+* [Segmentation Models](https://github.com/qubvel/segmentation_models)
+* [Keras implementation of Deeplabv3+](https://github.com/bonlime/keras-deeplab-v3-plus)
