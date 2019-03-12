@@ -8,7 +8,7 @@ WORK still in progress, we have two choises for fill the white holes.
 
 * Fill the white holes with the [GAN](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting).
 
-* If we are going to use a still camera, we can grab a background frame for fill the white holes.
+* If we are going to use a static camera, we can grab a background frame for fill the white holes.
 
 The main model is `model.py` this combines DeepLabv3+  and the custom Layer.
 <div style="text-align:center"><img src ="generator_deeplab.png" /></div>
@@ -112,7 +112,7 @@ def main(url):
 ### TODOs
 * Train the `inpainting` network with places365 dataset.
 * Merge the `intainting` network with the  proposed `model` for fill the white holes.
-
+* Propose a background patch for the white holes if we use static cameras.
 ## References
 
 * [Fully Convolutional Networks (FCNs) for Image Segmentation](http://warmspringwinds.github.io/tensorflow/tf-slim/2017/01/23/fully-convolutional-networks-(fcns)-for-image-segmentation/)
