@@ -118,3 +118,5 @@ def main(url):
 ## References
 
 * [Fully Convolutional Networks (FCNs) for Image Segmentation](http://warmspringwinds.github.io/tensorflow/tf-slim/2017/01/23/fully-convolutional-networks-(fcns)-for-image-segmentation/)
+
+* [Keras Functional API](https://keras.io/getting-started/functional-api-guide/)
