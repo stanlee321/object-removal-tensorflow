@@ -1,8 +1,8 @@
 # Object Removal Keras
 
-The general idea is to use the mask generade by Object Segmentation model like DeepLabv3+ for the Object Removal task, for accomplish this we use three Networks, [DeepLabv3+(mobilenetsV2 backbone)](https://github.com/stanlee321/object-removal-tensorflow/tree/master/deeplab3) + [customlayer](https://www.tensorflow.org/tutorials/eager/custom_layers) + [glcic](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting).
+The general idea is to use the mask generade by Object Segmentation model like DeepLabv3+ for the Object Removal task, for accomplish this we use three Networks, [DeepLabv3+(mobilenetsV2 backbone)](https://github.com/stanlee321/object-removal-tensorflow/tree/master/deeplab3) + [customlayer](https://github.com/stanlee321/object-removal-tensorflow/blob/master/model.py) + [glcic](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting).
 
-The first network computes the `mask hole` the second one compute the hole in the image  and the thirt fills the white hole using a [GAN](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting) .
+The first network computes the `mask segmentations` the second insert the holes in the image  and the thrid fills the white hole using a [GAN](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting) .
 
 WORK still in progress, we have two choises for fill the white holes.
 
