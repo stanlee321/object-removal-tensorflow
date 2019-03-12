@@ -87,6 +87,10 @@ You can change the category number in `test.py` or `test_video.py` in the `main(
 
 ```python
 
+# test.py
+...
+...
+
 def main(url):
     category = 7
     deeplab_model = DeepModel(obj=category)

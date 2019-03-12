@@ -31,7 +31,9 @@ from model import DeepModel
 """
 
 def read_image(img):
-
+    """
+    Read image and preprocess it for the inference in the segementation network.
+    """
     w, h, _ = img.shape
 
     ratio = 512. / np.max([w,h])
