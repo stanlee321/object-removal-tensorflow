@@ -106,13 +106,8 @@ Use the `./tools/plot.py` script for plot the mask according to the situation.
 
 <div style="text-align:center"><img src ="./images/example.png" /></div>
 
-### Requirement (it may work with lower versions too, but not guaranteed) 
-Keras==2.1.5  
-tensorflow-gpu==1.6.0  
-CUDA==9.0   
-
-
 ## References
 
 * [Segmentation Models](https://github.com/qubvel/segmentation_models)
 * [Keras implementation of Deeplabv3+](https://github.com/bonlime/keras-deeplab-v3-plus)
+* [image-classification-and-segmentation-using-tensorflow-and-tf-slim](http://warmspringwinds.github.io/tensorflow/tf-slim/2016/10/30/image-classification-and-segmentation-using-tensorflow-and-tf-slim/)
