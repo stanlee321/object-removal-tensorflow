@@ -120,3 +120,4 @@ def main(url):
 * [Fully Convolutional Networks (FCNs) for Image Segmentation](http://warmspringwinds.github.io/tensorflow/tf-slim/2017/01/23/fully-convolutional-networks-(fcns)-for-image-segmentation/)
 
 * [Keras Functional API](https://keras.io/getting-started/functional-api-guide/)
+* [how-to-execute-a-complicated-function-inside-keras-lambda-layer-using-tf-py-func](https://stackoverflow.com/questions/53527358/how-to-execute-a-complicated-function-inside-keras-lambda-layer-using-tf-py-func)
