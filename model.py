@@ -24,14 +24,15 @@ from tools.maskgen import CreateMaskTool
 
 # Load deeplab model
 from deeplab3.model import Deeplabv3
-from inpainting.model import model_generator
-from inpainting.model import model_discriminator
+#from inpainting.model import model_generator
+#from inpainting.model import model_discriminator
 
 
 class MaskModel:
-    def __init__(self, input_shape=(512, 512, 3), input_tensor=None):
+    def __init__(self, input_shape=(512, 512, 3), input_tensor=None, obj=7):
+        self.obj = obj
         self.input_shape = input_shape
-        self.create_mask_tool = CreateMaskTool()
+        self.create_mask_tool = CreateMaskTool(obj=obj)
     
     def call_py_function(self, x):
     
@@ -67,10 +68,10 @@ class MaskModel:
 
 
 class DeepModel:
-    def __init__(self, input_tensor=None, input_shape=(512, 512, 3)):
+    def __init__(self, input_tensor=None, input_shape=(512, 512, 3), obj=7):
         self.input_tensor = input_tensor
         self.input_shape = input_shape
-        self.mask_model = MaskModel(input_shape=self.input_shape)
+        self.mask_model = MaskModel(input_shape=self.input_shape, obj=obj)
         self.deeplab_model = Deeplabv3(weights='pascal_voc', 
                                         input_tensor=None,
                                         input_shape=self.input_shape, 

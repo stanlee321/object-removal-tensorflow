@@ -8,7 +8,7 @@ from model import Deeplabv3
 import skimage.morphology
 import skimage.io as io
 from skimage.color import rgba2rgb
-#from plot import *
+
 
 
 def mask_ops(image_np, resized_im, seg_map, pad_x):
@@ -20,10 +20,11 @@ def mask_ops(image_np, resized_im, seg_map, pad_x):
     print('LABEL...', label.shape)
     prediction_mask = (label.squeeze() == 7)
     print('Preddd...', prediction_mask.shape)
+
+    prediction_mask = np.invert(prediction_mask)
+
     # Let's apply some morphological operations to
     # create the contour for our sticker
-    prediction_mask = np.invert(prediction_mask)
-    print('pred mask', prediction_mask.shape)
     
     cropped_object = image_np * np.dstack((prediction_mask,) * 3)
     
@@ -72,6 +73,8 @@ def read_image(url):
 
 
 def main(url):
+    # Plot the image with holes
+
     deeplab_model = Deeplabv3()
 
     image_np, resized_im, pad_x = read_image(url)
@@ -94,9 +97,16 @@ def main(url):
     io.show()
 
     ##################################
+    # Differente plot options
+    ##################################
+    # from plot import *
+
+    # Plot the 3 column image
     # run_visualization(url, deeplab_model)
+
+    # Plot simple image with mask
     # simple_plot(deeplab_model, url)
-    # contour_plot(deeplab_model, url)
+
     # cv2.imwrite('image_labels.jpg', labels[:-pad_x])
 
 if __name__ == '__main__':

@@ -7,9 +7,12 @@ from skimage.color import rgba2rgb
 
 
 class CreateMaskTool:
-    def __init__(self):
+    def __init__(self, obj=7):
+
         self.image = None
-        # Setter/Getter for image
+        self.obj = obj
+
+    # Setter/Getter for image
     @property
     def image(self):
         return self.__image
@@ -21,7 +24,7 @@ class CreateMaskTool:
         # Normalize the output
         labels = np.argmax(seg_map,-1)
         label = labels[:-pad_x]
-        prediction_mask = (label.squeeze() == 7)
+        prediction_mask = (label.squeeze() == self.obj)
 
         # Let's apply some morphological operations to
         # create the contour for our sticker
@@ -76,14 +79,8 @@ class CreateMaskTool:
 
         """
 
-        print('INPUT TENSOR_IMAGENP', input_image_np.shape)
-        print('INPUT MASK TENSOR', tensor_mask_pred.shape)
-
         input_image_np = input_image_np.squeeze()
         tensor_mask_pred = tensor_mask_pred.squeeze()
-        print('....')
-        print('INPUT TENSOR_IMAGENP', input_image_np.shape)
-        print('INPUT MASK TENSOR', tensor_mask_pred.shape)
 
         image_np, resized_im, pad_x = self._get_pad()
 

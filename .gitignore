@@ -1,1 +1,2 @@
-nets/*.hdf5
+nets/*.hdf5__pycache__/
+__pycache__/

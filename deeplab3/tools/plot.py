@@ -88,6 +88,9 @@ def run_model(model, resized2):
     return seg_map
 
 def read_image(url):
+    """
+    Aux function for read the local url image.
+    """
     try:
         img = plt.imread(url)
     except IOError:
@@ -104,6 +107,14 @@ def read_image(url):
     return image_np, resized_im, pad_x
 
 def simple_plot(model, url):
+    """
+    This do  a  simple plot from a local file in disk url
+
+    Inputs:
+
+    model: DeepLabv3+ Keras model
+    url: String with_the_path_to_the_file.png
+    """
 
     # Read Inputs
     image_np, resized_im, pad_x = read_image(url)
