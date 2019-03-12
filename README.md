@@ -46,8 +46,10 @@ TIME that took the inference 1.6270244121551514
 ...
 
 ```
+
 <div style="text-align:center"><img src ="./images/test_video.png" /></div>
 
+Tested on Ubuntu 18.04 Intel Corei3 laptop computer.
 
 #### Change removed object:
 
