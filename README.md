@@ -2,7 +2,13 @@
 
 The general idea is to use the mask generade by Object Segmentation model like DeepLabv3+ for the Object Removal task, for accomplish this we use three Networks, [DeepLabv3+(mobilenetsV2 backbone)](https://github.com/stanlee321/object-removal-tensorflow/tree/master/deeplab3) + [customlayer](https://www.tensorflow.org/tutorials/eager/custom_layers) + [glcic](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting).
 
-The first network computes the `mask hole` the second one compute the hole in the image  and the thirt fills the white hole using a [GAN](www.google.com) .
+The first network computes the `mask hole` the second one compute the hole in the image  and the thirt fills the white hole using a [GAN](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting) .
+
+WORK still in progress, we have two choises for fill the white holes.
+
+* Fill the white holes with the [GAN](https://github.com/stanlee321/object-removal-tensorflow/tree/master/inpainting).
+
+* If we are going to use a still camera, we can grab a background frame for fill the white holes.
 
 The main model is `model.py` this combines DeepLabv3+  and the custom Layer.
 <div style="text-align:center"><img src ="generator_deeplab.png" /></div>
@@ -15,7 +21,7 @@ The output of the main network in `model.py` is `(batch_size, height, width, num
 
 #### For test image
 
-Run the script `test.py` in the root of the folder, this will annalice the image ` ./deeplab3/imgs/image1.jpg` with the next output.
+Run the script `test.py` in the root of the folder, this will process the image ` ./deeplab3/imgs/image1.jpg` and will output:
 
 <div style="text-align:center"><img src ="./images/test.png" /></div>
 
